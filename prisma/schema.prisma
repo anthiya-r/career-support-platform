@@ -1,0 +1,109 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  APPLICANT
+  REVIEWER
+  ADMIN
+}
+
+enum SubmissionStatus {
+  PENDING
+  ASSIGNED
+  REVIEWED
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(APPLICANT)
+
+  name String?
+  goal String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  sessions         Session[]
+  submissions      Submission[] @relation("ApplicantSubmissions")
+  assignedToReview Submission[] @relation("ReviewerAssignments")
+  reviews          Review[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  expiresAt DateTime @db.Timestamptz(3)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Submission {
+  id        String           @id @default(cuid())
+  applicantId String
+  applicant   User           @relation("ApplicantSubmissions", fields: [applicantId], references: [id], onDelete: Cascade)
+
+  title   String
+  status  SubmissionStatus @default(PENDING)
+
+  resumeText        String?
+  resumeFileName    String?
+  resumeFileMime    String?
+  resumeFileBase64  String?
+
+  consentGivenAt DateTime @db.Timestamptz(3)
+  consentVersion String @default("v1")
+
+  assignedReviewerId String?
+  assignedReviewer   User?   @relation("ReviewerAssignments", fields: [assignedReviewerId], references: [id], onDelete: SetNull)
+
+  reviews Review[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  @@index([applicantId])
+  @@index([assignedReviewerId])
+  @@index([status])
+}
+
+model Review {
+  id           String   @id @default(cuid())
+  submissionId String  
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  reviewerId String
+  reviewer   User     @relation(fields: [reviewerId], references: [id], onDelete: Cascade)
+
+  score     Int
+  comment   String
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  @@index([reviewerId])
+}
+
+model SubmissionLog {
+  id            String @id @default(cuid())
+  submissionId  String
+  action        String
+  actorId       String?
+  createdAt     DateTime @default(now()) @db.Timestamptz(3)
+}
