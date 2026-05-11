@@ -3,6 +3,9 @@ import { z } from "zod";
 import { prisma } from "../../../lib/db";
 import { createSession, hashPassword } from "../../../lib/auth";
 
+// Force dynamic rendering for this route
+export const dynamic = "force-dynamic";
+
 const BodySchema = z.object({
 	email: z.string().email(),
 	password: z.string().min(6),
