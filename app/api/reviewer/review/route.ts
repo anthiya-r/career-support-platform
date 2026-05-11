@@ -3,6 +3,9 @@ import { z } from "zod";
 import { getCurrentUser } from "../../../lib/auth";
 import { prisma } from "../../../lib/db";
 
+// Force dynamic rendering for this route
+export const dynamic = "force-dynamic";
+
 const BodySchema = z.object({
 	submissionId: z.string().min(1),
 	score: z.number().int().min(1).max(5),

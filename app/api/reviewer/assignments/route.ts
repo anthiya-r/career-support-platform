@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "../../../lib/auth";
 import { prisma } from "../../../lib/db";
+
+// Force dynamic rendering for this route
+export const dynamic = "force-dynamic";
 import { toUiStatus } from "../../../lib/submission";
 
 export async function GET() {
