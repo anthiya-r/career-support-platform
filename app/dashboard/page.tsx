@@ -5,6 +5,9 @@ import { requireUser } from "../lib/auth";
 import { prisma } from "../lib/db";
 import { toUiStatus } from "../lib/submission";
 
+// Force dynamic rendering for this page
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
 	const user = await requireUser();
 	const submissions = await prisma.submission.findMany({

@@ -3,6 +3,9 @@ import FeedbackCard from "../../components/FeedbackCard";
 import { requireUser } from "../../lib/auth";
 import { prisma } from "../../lib/db";
 
+// Force dynamic rendering for this page
+export const dynamic = "force-dynamic";
+
 type Props = {
 	params: Promise<{ id: string }>;
 };
