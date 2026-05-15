@@ -16,6 +16,9 @@ if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
 export const nextAuthOptions: NextAuthOptions = {
 	providers,
 	session: { strategy: "jwt" },
+	pages: {
+		signIn: "/auth/signin",
+	},
 	callbacks: {
 		async signIn({ user, account }) {
 			if (account?.provider === "google") {
