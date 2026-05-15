@@ -112,12 +112,12 @@ export default function Navbar() {
 							>
 								Login
 							</Link>
-							<Link
-								href="/login"
+							{/* <Link
+								href="/"
 								className="rounded-md border border-[#FFF1B5] px-3 py-2 text-sm font-semibold cursor-pointer text-[#FFF1B5] transition hover:bg-[#FFF1B5] hover:text-[#43302E]"
 							>
 								Sign Up
-							</Link>
+							</Link> */}
 						</>
 					) : null}
 				</div>
