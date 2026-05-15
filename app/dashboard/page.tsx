@@ -1,20 +1,23 @@
 import Link from "next/link";
 import Navbar from "../components/Navbar";
 import SubmissionCard from "../components/SubmissionCard";
-import { requireUser } from "../lib/auth";
+import { getCurrentUser } from "../lib/auth";
 import { prisma } from "../lib/db";
 import { toUiStatus } from "../lib/submission";
+import { submissions as mockSubmissions } from "../mock-data";
 
 // Force dynamic rendering for this page
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-	const user = await requireUser();
-	const submissions = await prisma.submission.findMany({
-		where: { applicantId: user.id },
-		orderBy: { createdAt: "desc" },
-		select: { id: true, title: true, status: true },
-	});
+	const user = await getCurrentUser();
+	const submissions = user
+		? await prisma.submission.findMany({
+				where: { applicantId: user.id },
+				orderBy: { createdAt: "desc" },
+				select: { id: true, title: true, status: true },
+			})
+		: mockSubmissions;
 
 	return (
 		<div className="min-h-screen">
@@ -25,16 +28,18 @@ export default async function DashboardPage() {
 						<h1 className="text-2xl font-bold text-[#43302E]">
 							Your Submissions
 						</h1>
-						<p className="text-sm text-[#43302E]">
-							Track current resume review progress.
-						</p>
+						{/* <p className="text-sm text-[#43302E]">
+							See what your dashboard will look like after signing up.
+						</p> */}
 					</div>
-					<Link
-						href="/submit"
-						className="rounded-md bg-[#3A8FC1] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#2B7DA8]"
-					>
-						Submit New Resume
-					</Link>
+					{user && (
+						<Link
+							href="/submit"
+							className="rounded-md bg-[#3A8FC1] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#2B7DA8]"
+						>
+							Submit New Resume
+						</Link>
+					)}
 				</div>
 
 				<div className="grid gap-4">

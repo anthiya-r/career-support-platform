@@ -96,13 +96,30 @@ export default function Navbar() {
 							</Link>
 						);
 					})}
-					<button
-						type="button"
-						onClick={() => void handleLogout()}
-						className="rounded-md bg-[#FFF1B5] px-3 py-2 text-sm font-semibold cursor-pointer text-[#43302E] transition hover:bg-[#43302E] hover:text-[#FFF1B5]"
-					>
-						Logout
-					</button>
+					{!loading && user ? (
+						<button
+							type="button"
+							onClick={() => void handleLogout()}
+							className="rounded-md bg-[#FFF1B5] px-3 py-2 text-sm font-semibold cursor-pointer text-[#43302E] transition hover:bg-[#43302E] hover:text-[#FFF1B5]"
+						>
+							Logout
+						</button>
+					) : !loading && !user ? (
+						<>
+							<Link
+								href="/login"
+								className="rounded-md bg-[#FFF1B5] px-3 py-2 text-sm font-semibold cursor-pointer text-[#43302E] transition hover:bg-[#43302E] hover:text-[#FFF1B5]"
+							>
+								Login
+							</Link>
+							<Link
+								href="/login"
+								className="rounded-md border border-[#FFF1B5] px-3 py-2 text-sm font-semibold cursor-pointer text-[#FFF1B5] transition hover:bg-[#FFF1B5] hover:text-[#43302E]"
+							>
+								Sign Up
+							</Link>
+						</>
+					) : null}
 				</div>
 
 				{/* Mobile Hamburger Menu */}
@@ -159,16 +176,35 @@ export default function Navbar() {
 								</Link>
 							);
 						})}
-						<button
-							type="button"
-							onClick={() => {
-								void handleLogout();
-								setMobileMenuOpen(false);
-							}}
-							className="w-full rounded-md bg-[#FFF1B5] px-3 py-2 text-sm font-semibold cursor-pointer text-[#43302E] transition hover:bg-[#43302E] hover:text-[#FFF1B5]"
-						>
-							Logout
-						</button>
+						{!loading && user ? (
+							<button
+								type="button"
+								onClick={() => {
+									void handleLogout();
+									setMobileMenuOpen(false);
+								}}
+								className="w-full rounded-md bg-[#FFF1B5] px-3 py-2 text-sm font-semibold cursor-pointer text-[#43302E] transition hover:bg-[#43302E] hover:text-[#FFF1B5]"
+							>
+								Logout
+							</button>
+						) : !loading && !user ? (
+							<>
+								<Link
+									href="/login"
+									onClick={() => setMobileMenuOpen(false)}
+									className="block w-full rounded-md bg-[#FFF1B5] px-3 py-2 text-sm font-semibold cursor-pointer text-[#43302E] transition hover:bg-[#43302E] hover:text-[#FFF1B5]"
+								>
+									Login
+								</Link>
+								<Link
+									href="/login"
+									onClick={() => setMobileMenuOpen(false)}
+									className="block w-full rounded-md border border-[#FFF1B5] px-3 py-2 text-sm font-semibold cursor-pointer text-[#FFF1B5] transition hover:bg-[#FFF1B5] hover:text-[#43302E]"
+								>
+									Sign Up
+								</Link>
+							</>
+						) : null}
 					</div>
 				</div>
 			)}
